@@ -4,10 +4,12 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
 @Dao
-public interface wordDao {
+public interface WordDao {
 
     @Insert
     void insertWord(Word word);
@@ -16,5 +18,5 @@ public interface wordDao {
     void deleteAll();
 
     @Query("SELECT * FROM word_table ORDER BY word ASC")
-    List<Word> getAllWords();
+    LiveData<List<Word>> getAllWords();
 }
