@@ -6,6 +6,9 @@ import com.example.words.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 
@@ -24,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        RecyclerView recyclerWord = binding.getRoot().findViewById(R.id.recyclerWord);
+        recyclerWord.setLayoutManager(new LinearLayoutManager(this));
+        WordListAdapter wordListAdapter = new WordListAdapter(this);
+        recyclerWord.setAdapter(wordListAdapter);
+        recyclerWord.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         setSupportActionBar(binding.toolbar);
 

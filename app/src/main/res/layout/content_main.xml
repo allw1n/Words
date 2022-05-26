@@ -8,7 +8,7 @@
     android:layout_marginTop="54dp">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/wordsRecyclerView"
+        android:id="@+id/recyclerWord"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
