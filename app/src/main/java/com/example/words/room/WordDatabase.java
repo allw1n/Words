@@ -12,7 +12,7 @@ public abstract class WordDatabase extends RoomDatabase {
 
     public abstract WordDao wordDao();
 
-    private static WordDatabase INSTANCE;
+    private static volatile WordDatabase INSTANCE;
 
     public static WordDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
@@ -20,6 +20,7 @@ public abstract class WordDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WordDatabase.class, DB_NAME)
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

@@ -1,7 +1,8 @@
-package com.example.words;
+package com.example.words.ui;
 
 import android.os.Bundle;
 
+import com.example.words.R;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
