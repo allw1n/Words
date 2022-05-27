@@ -66,14 +66,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerWord.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         wordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
-
-        Observer<List<Word>> observer = new Observer<List<Word>>() {
+        wordViewModel.getWordsList().observe(this, new Observer<List<Word>>() {
             @Override
-            public void onChanged(List<Word> wordList) {
+            public void onChanged(@NonNull final List<Word> wordList) {
                 wordListAdapter.setWords(wordList);
             }
-        };
-        wordViewModel.getWordsList().observe(this, observer);
+        });
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
