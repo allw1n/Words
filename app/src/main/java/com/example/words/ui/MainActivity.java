@@ -1,32 +1,63 @@
 package com.example.words.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.words.R;
-import com.google.android.material.snackbar.Snackbar;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 
 import com.example.words.databinding.ActivityMainBinding;
+import com.example.words.room.Word;
+import com.example.words.viewmodel.WordViewModel;
 
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    private WordViewModel wordViewModel;
+
+    private final ActivityResultLauncher<Intent> addNewWord = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Intent replyData = result.getData();
+                        if (replyData != null) {
+                            Word newWord = new Word(replyData.getStringExtra(AddNewActivity.EXTRA_REPLY));
+                            wordViewModel.insertWord(newWord);
+                        }
+                    }
+                }
+            }
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.words.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
 
         RecyclerView recyclerWord = binding.getRoot().findViewById(R.id.recyclerWord);
         recyclerWord.setLayoutManager(new LinearLayoutManager(this));
@@ -34,11 +65,20 @@ public class MainActivity extends AppCompatActivity {
         recyclerWord.setAdapter(wordListAdapter);
         recyclerWord.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        setSupportActionBar(binding.toolbar);
+        wordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
+
+        Observer<List<Word>> observer = new Observer<List<Word>>() {
+            @Override
+            public void onChanged(List<Word> wordList) {
+                wordListAdapter.setWords(wordList);
+            }
+        };
+        wordViewModel.getWordsList().observe(this, observer);
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                addNewWord.launch(new Intent(MainActivity.this, AddNewActivity.class));
             }
         });
     }
@@ -63,5 +103,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

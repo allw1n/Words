@@ -2,6 +2,8 @@ package com.example.words.repository;
 
 import android.app.Activity;
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import androidx.lifecycle.LiveData;
@@ -35,11 +37,10 @@ public class WordRepository {
             public void run() {
                 wordDao.insertWord(word);
 
-                Activity activity = (Activity) application.getApplicationContext();
-                activity.runOnUiThread(new Runnable() {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(activity, word + " inserted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(application, word.getWord() + " inserted", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

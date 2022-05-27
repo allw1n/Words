@@ -1,6 +1,7 @@
 package com.example.words.ui;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,13 +41,19 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
         }
     }
 
+    void setWords(List<Word> wordList) {
+        this.wordList = wordList;
+        //notifyItemRangeInserted(0, wordList.size());
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
         if (wordList != null) return wordList.size();
         else return 0;
     }
 
-    class WordViewHolder extends RecyclerView.ViewHolder {
+    static class WordViewHolder extends RecyclerView.ViewHolder {
 
         private final MaterialTextView viewWord;
 
