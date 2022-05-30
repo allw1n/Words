@@ -27,6 +27,7 @@ import com.example.words.viewmodel.WordViewModel;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -96,7 +97,12 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_clear_data) {
+            if (wordViewModel.getAWord().size() == 0) {
+                Toast.makeText(this, "Nothing to clear!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Clearing... data", Toast.LENGTH_SHORT).show();
+            }
             return true;
         }
 

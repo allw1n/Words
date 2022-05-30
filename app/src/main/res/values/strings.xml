@@ -13,4 +13,5 @@
     <string name="add_new_word">Add new word</string>
     <string name="no_words">No words</string>
     <string name="add">Add</string>
+    <string name="clear_data">Clear Data</string>
 </resources>

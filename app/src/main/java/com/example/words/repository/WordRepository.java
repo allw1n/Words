@@ -1,6 +1,5 @@
 package com.example.words.repository;
 
-import android.app.Activity;
 import android.app.Application;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,12 +11,18 @@ import com.example.words.room.Word;
 import com.example.words.room.WordDao;
 import com.example.words.room.WordDatabase;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public class WordRepository {
 
-    private WordDao wordDao;
-    private LiveData<List<Word>> wordsList;
+    private final WordDao wordDao;
+    private final LiveData<List<Word>> wordsList;
     private final Application application;
 
     public WordRepository(Application application) {
@@ -48,6 +53,36 @@ public class WordRepository {
     }
 
     public void deleteAll() {
-        wordDao.deleteAll();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                wordDao.deleteAll();
+            }
+        }).start();
+    }
+
+    public List<Word> getAWord() {
+        List<Word> word = new ArrayList<>();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                word.addAll(wordDao.getAWord());
+            }
+        });
+
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Callable<Word[]> callable = new Callable<Word[]>() {
+            @Override
+            public Word[] call() throws Exception {
+                return wordDao.getAWord();
+            }
+        };
+        Future<Word[]> future= executor.submit(callable);
+        try {
+            future.get();
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        executor.shutdown();
     }
 }

@@ -19,15 +19,15 @@ public abstract class WordDatabase extends RoomDatabase {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    String[] words = {"Like", "A", "Somebody"};
 
                     WordDao dao;
                     dao = INSTANCE.wordDao();
 
-                    dao.deleteAll();
-
-                    for (int i = 0; i < words.length; i++) {
-                        dao.insertWord(new Word(words[i]));
+                    if (dao.getAWord().length == 0) {
+                        String[] words = {"Like", "A", "Somebody"};
+                        for (String word : words) {
+                            dao.insertWord(new Word(word));
+                        }
                     }
                 }
             }).start();

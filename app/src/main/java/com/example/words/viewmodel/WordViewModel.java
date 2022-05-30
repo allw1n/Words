@@ -13,9 +13,9 @@ import java.util.List;
 
 public class WordViewModel extends AndroidViewModel {
 
-    private WordRepository wordRepository;
+    private final WordRepository wordRepository;
 
-    private LiveData<List<Word>> wordsList;
+    private final LiveData<List<Word>> wordsList;
 
     public WordViewModel(@NonNull Application application) {
         super(application);
@@ -33,5 +33,9 @@ public class WordViewModel extends AndroidViewModel {
 
     public void deleteAll() {
         wordRepository.deleteAll();
+    }
+
+    public List<Word> getAWord() {
+        return wordRepository.getAWord();
     }
 }

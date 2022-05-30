@@ -1,7 +1,7 @@
 package com.example.words.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordViewHolder> {
 
-    private Context context;
+    private final Context context;
     private List<Word> wordList;
 
     WordListAdapter(Context context) {
@@ -41,6 +41,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordVi
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     void setWords(List<Word> wordList) {
         this.wordList = wordList;
         //notifyItemRangeInserted(0, wordList.size());
