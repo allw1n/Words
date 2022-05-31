@@ -24,7 +24,7 @@ public abstract class WordDatabase extends RoomDatabase {
                     dao = INSTANCE.wordDao();
 
                     if (dao.getAWord().length == 0) {
-                        String[] words = {"Like", "A", "Somebody"};
+                        String[] words = {"like", "a", "somebody"};
                         for (String word : words) {
                             dao.insertWord(new Word(word));
                         }

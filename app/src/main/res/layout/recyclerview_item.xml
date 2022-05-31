@@ -9,6 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextAppearance.AppCompat.Large"
-        android:paddingBottom="6dp"/>
+        android:padding="12dp"
+        android:background="@color/cardview_dark_background"
+        android:textColor="@color/white"
+        android:layout_marginBottom="6dp"/>
 
 </LinearLayout>

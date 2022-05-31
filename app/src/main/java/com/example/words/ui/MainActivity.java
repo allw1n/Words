@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerWord.setLayoutManager(new LinearLayoutManager(this));
         WordListAdapter wordListAdapter = new WordListAdapter(this);
         recyclerWord.setAdapter(wordListAdapter);
-        recyclerWord.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         wordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
         wordViewModel.getWordsList().observe(this, new Observer<List<Word>>() {
@@ -73,6 +73,25 @@ public class MainActivity extends AppCompatActivity {
                 wordListAdapter.setWords(wordList);
             }
         });
+
+        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper
+                .SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Word swipedWord = wordListAdapter.getWordAtPosition(
+                        viewHolder.getAdapterPosition());
+                wordViewModel.deleteAWord(swipedWord);
+            }
+        });
+        touchHelper.attachToRecyclerView(recyclerWord);
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,10 +117,11 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_clear_data) {
-            if (wordViewModel.getAWord().size() == 0) {
+            if (wordViewModel.getAWord().length == 0) {
                 Toast.makeText(this, "Nothing to clear!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Clearing... data", Toast.LENGTH_SHORT).show();
+                wordViewModel.deleteAll();
             }
             return true;
         }

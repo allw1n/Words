@@ -15,6 +15,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class AddNewActivity extends AppCompatActivity {
@@ -55,7 +56,8 @@ public class AddNewActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String newWord = Objects.requireNonNull(editInputWord.getText()).toString();
+                String newWord = Objects.requireNonNull(editInputWord.getText())
+                        .toString().toLowerCase();
                 if (TextUtils.isEmpty(newWord)) {
                     layoutInputWord.setError("Required");
                     return;

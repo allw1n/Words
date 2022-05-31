@@ -61,28 +61,35 @@ public class WordRepository {
         }).start();
     }
 
-    public List<Word> getAWord() {
-        List<Word> word = new ArrayList<>();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                word.addAll(wordDao.getAWord());
-            }
-        });
+    public Word[] getAWord() {
 
+        Word[] word = new Word[0];
         ExecutorService executor = Executors.newSingleThreadExecutor();
+
         Callable<Word[]> callable = new Callable<Word[]>() {
             @Override
             public Word[] call() throws Exception {
                 return wordDao.getAWord();
             }
         };
-        Future<Word[]> future= executor.submit(callable);
+
+        Future<Word[]> future = executor.submit(callable);
         try {
-            future.get();
+            word = future.get();
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
         executor.shutdown();
+
+        return word;
+    }
+
+    public void deleteAWord(Word word) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                wordDao.deleteAWord(word);
+            }
+        }).start();
     }
 }
